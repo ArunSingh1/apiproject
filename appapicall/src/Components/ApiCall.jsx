@@ -1,41 +1,34 @@
-import React from 'react'
-import {Box,  Button, Typography } from '@mui/material'
-import { useState, useEffect } from 'react'
-import axios from 'axios'
+import React, { useState } from 'react';
+import {Box,Typography } from '@mui/material'
 
 
 function ApiCall() {
+  const [apidata, setApiData] = useState(null);
+  const [error, setError] = useState(null);
 
-    const [apidata, setApidata] = useState()
-    const [error, setError] = useState()
+  const url = 'https://api.publicapis.org/entries'
 
-    const url = 'https://api.publicapis.org/entries'
 
-    const fetchapiData = () => {
-        axios.get(url)
-            .then((response) => {
-                console.log('api response-', response.data)
-                setApidata(response.data)
-            })
-            .catch((error) => {
-                console.error('Error -', error);
-                setError(error)
-            });
+
+  const fetchapiData = async () => {
+    try {
+      const response = await fetch(url);
+
+      const data = await response.json();
+      setApiData(data);
+      setError(null);
+    } catch (error) {
+      setError(error);
     }
+  };
 
-    useEffect(() => {
-        fetchapiData();
-      }, [url]);
-
-  
   return (
     <Box m = {10}>
 
-        <Button variant="contained" 
-        onClick={fetchapiData}
-        >
-            Call API
-        </Button>
+
+        <button onClick={fetchapiData}>
+            CallAPI
+        </button>
         
         {apidata && (
                 <div>
@@ -53,7 +46,7 @@ function ApiCall() {
 
 
     </Box>
-  )
+  );
 }
 
-export default ApiCall
+export default ApiCall;
